@@ -1,6 +1,11 @@
 #perl
 
+# Config start
+
 my $color = "";
+my $path = "";
+
+# Config end
 
 my @vmapList = lxq("query layerservice vmaps ?");
 our @layers = lxq("query layerservice layers ? all");
@@ -14,11 +19,8 @@ foreach my $vMap (@vmapList){
 		$vmapName = lxq("query layerservice vmap.name ? $vMap");
 		my $i = 1;
 		foreach my $v (@views){
-		        next if($vmapName eq "Texture");
-		        next if($vmapName eq "TextureUV");
-		        next if($vmapName eq "laces uv");
-		        next if($vmapName eq "sole uv");
-		        next if($vmapName eq "chunky");
+		        next if(   $vmapName eq "Texture"
+				|| $vmapName eq "TextureUV");
 		        lxout("uv map $vmapName");
 		        lx("!!select.vertexMap [$vmapName] [txuv] [replace]");
 		        
@@ -32,9 +34,8 @@ foreach my $vMap (@vmapList){
 		        lx("render.camera [$cam]");
 		        lxout("vis $v set to 1, rendering with $cam\n");
 		        
-		        my $filename = "D:\\tmp\\render\\".$vmapName."-".$color."-".$i.".tga";
+		        my $filename = $path.$vmapName."-".$color."-".$i.".tga";
 		        
-		        #lxout("would save $filename");
 		        lx("bake filename:[$filename] format:[TGA]");
 		        $i++;
 		}
